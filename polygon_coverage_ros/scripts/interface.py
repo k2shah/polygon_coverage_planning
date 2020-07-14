@@ -10,6 +10,8 @@ import os
 import os.path as osp
 
 # std ROS imports
+import numpy as np
+import matplotlib.pyplot as plt
 import rospy
 import std_msgs.msg
 from geometry_msgs.msg import PoseStamped, Vector3, PoseArray
@@ -59,9 +61,10 @@ class PlannerProxy(object):
                         f"{pose.position.z}\n")
 
     def plotPath(self, path):
+        outFile = self.outFile + ".png"
         path = np.array([[pose.position.x, pose.position.y] for pose in path])
         plt.plot(path[:, 0], path[:, 1])
-        plt.savefig(self.outFile, dpi=200, format='png', bbox_inches='tight')
+        plt.savefig(outFile, dpi=200, bbox_inches='tight')
 
     def pathPlanSrv_call(self):
         # service inputs
