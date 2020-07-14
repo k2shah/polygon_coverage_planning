@@ -75,12 +75,11 @@ class PlannerProxy(object):
         goalVel = Vector3()
         boundingBox = Vector3()
 
-        startPose.pose.position.x = 78635.0
-        startPose.pose.position.y = 1471900.0
+        startPose.pose.position.x = 78209.0
+        startPose.pose.position.y = 1472560.0
 
-        goalPose.pose.position.x = 78635.0
-        goalPose.pose.position.y = 1471900.0
-
+        #start = goal
+        goalPose.pose= startPose.pose
 
         # service call
         rsp = self.pathPlanSrv(
