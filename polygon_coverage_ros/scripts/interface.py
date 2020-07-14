@@ -33,22 +33,35 @@ class PlannerProxy(object):
             self.waypointCB)
         # service
         self.pathPlanSrv = rospy.ServiceProxy(
-		"/coverage_planner/plan_path",
-		PlannerService)
+            "/coverage_planner/plan_path",
+            PlannerService)
         self.rootDir = os.getcwd()
         self.outDir = "out"
-        self.outName = "path.txt"
+        self.outName = "path"
         if not os.path.exists(self.outDir):
             os.makedirs(self.outDir)
         self.outFile = osp.join(self.rootDir, self.outDir, self.outName)
         rospy.spin()
+
     def waypointCB(self, msg):
         # write the waypoint to a file
-        print("got path. outputing to file")
-        print(self.outFile)
-        with open(self.outFile, "w+") as f:
-            for pose in msg.poses:
-                f.write(f"{pose.position.x}, {pose.position.y}, {pose.position.z}\n")
+        self.writePath(msg.poses)
+        self.plotPath(msg.poses)
+
+    def writePath(self, path):
+        # path: array of Poses
+        outFile = self.outFile + ".txt"
+        print("writing to file: " + outFile)
+        with open(outFile, "w+") as f:
+            for pose in path:
+                f.write(f"{pose.position.x}," +
+                        f"{pose.position.y}," +
+                        f"{pose.position.z}\n")
+
+    def plotPath(self, path):
+        path = np.array([[pose.position.x, pose.position.y] for pose in path])
+        plt.plot(path[:, 0], path[:, 1])
+        plt.savefig(self.outFile, dpi=200, format='png', bbox_inches='tight')
 
     def pathPlanSrv_call(self):
         # service inputs
