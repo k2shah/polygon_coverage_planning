@@ -13,7 +13,6 @@ import matplotlib.pyplot as plt
 import rospy
 import std_msgs.msg
 from geometry_msgs.msg import PoseStamped, Vector3, PoseArray
-from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 # special ROS service
 from mav_planning_msgs.srv import PlannerService
 
@@ -29,7 +28,7 @@ class PlannerProxy(object):
         # prep output location
         rootDir = osp.dirname(osp.abspath(__file__))
         outDir = osp.join(rootDir, "out")
-        outName = "path"
+        outName = "path_1"
         if not osp.exists(outDir):
             os.makedirs(outDir)
         self.outFile = osp.join(outDir, outName)
@@ -75,8 +74,8 @@ class PlannerProxy(object):
         goalVel = Vector3()
         boundingBox = Vector3()
 
-        startPose.pose.position.x = 78209.0
-        startPose.pose.position.y = 1472560.0
+        startPose.pose.position.x = 78639.0
+        startPose.pose.position.y = 1472530.0
 
         #start = goal
         goalPose.pose= startPose.pose
