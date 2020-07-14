@@ -4,6 +4,7 @@ Copyright (c) 2019 Kunal Shah
                 kshah.kunal@gmail.com
 """
 # std lib imports
+import os
 import os.path as osp
 import numpy as np
 import matplotlib.pyplot as plt
@@ -25,6 +26,14 @@ class PlannerProxy(object):
         # Tell ROS this is a node
         rospy.init_node('plannerProxy', anonymous=True)
 
+        # prep output location
+        rootDir = osp.dirname(osp.abspath(__file__))
+        outDir = osp.join(rootDir, "out")
+        outName = "path"
+        if not osp.exists(outDir):
+            os.makedirs(outDir)
+        self.outFile = osp.join(outDir, outName)
+
         # subs
         self.poseSub = rospy.Subscriber(
             "/waypoint_list",
@@ -34,12 +43,7 @@ class PlannerProxy(object):
         self.pathPlanSrv = rospy.ServiceProxy(
             "/coverage_planner/plan_path",
             PlannerService)
-        self.rootDir = osp.dirname(os.path.abspath(__file__))
-        self.outDir = "out"
-        self.outName = "path"
-        if not os.path.exists(self.outDir):
-            os.makedirs(self.outDir)
-        self.outFile = osp.join(self.rootDir, self.outDir, self.outName)
+
         self.run()
 
     def waypointCB(self, msg):
@@ -72,7 +76,7 @@ class PlannerProxy(object):
         boundingBox = Vector3()
 
         # service call
-        rsp = self.eLandService(
+        rsp = self.pathPlanSrv(
             startPose,
             startVel,
             goalPose,
@@ -83,16 +87,15 @@ class PlannerProxy(object):
 
     def run(self):
         rate = rospy.Rate(10)  # 10 Hz
-        print("call to start, x to exit")
         while not rospy.is_shutdown():
-            usrCmd = raw_input("Enter a command: ")
+            print("c to start, x to exit")
+            usrCmd = input("Enter a command: ")
             if usrCmd == 'c':
                 self.pathPlanSrv_call()
             elif usrCmd == 'x':
                 break
             else:
                 print('Not a valid command')
-                print("c to start, x to exit")
             rate.sleep()
 
 
