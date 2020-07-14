@@ -14,7 +14,7 @@ lateral_fov: 0.84 # Only for frustum sensor model.
 
 latch_topics: true
 
-publish_plan_on_planning_complete: false
-publish_visualization_on_planning_complete: true
-set_start_goal_from_rviz: true
-set_polygon_from_rviz: true
+publish_plan_on_planning_complete: true
+publish_visualization_on_planning_complete: false
+set_start_goal_from_rviz: false
+set_polygon_from_rviz: false

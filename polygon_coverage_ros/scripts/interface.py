@@ -1,10 +1,12 @@
-'''
+#!/usr/bin/python3
+"""
 Copyright (c) 2019 Kunal Shah
                 kshah.kunal@gmail.com
-'''
+"""
 # std lib imports
 import sys
 import time
+import os
 import os.path as osp
 
 # std ROS imports
@@ -13,7 +15,7 @@ import std_msgs.msg
 from geometry_msgs.msg import PoseStamped, Vector3, PoseArray
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 # special ROS service
-from mav_comm.mav_planning_msgs.srv import PlannerService
+from mav_planning_msgs.srv import PlannerService
 
 
 class PlannerProxy(object):
@@ -31,19 +33,22 @@ class PlannerProxy(object):
             self.waypointCB)
         # service
         self.pathPlanSrv = rospy.ServiceProxy(
-
-            PlannerService)
+		"/coverage_planner/plan_path",
+		PlannerService)
+        self.rootDir = os.getcwd()
         self.outDir = "out"
         self.outName = "path.txt"
         if not os.path.exists(self.outDir):
             os.makedirs(self.outDir)
-        self.outFile = osp.join(self.outDir, self.outName)
-
+        self.outFile = osp.join(self.rootDir, self.outDir, self.outName)
+        rospy.spin()
     def waypointCB(self, msg):
         # write the waypoint to a file
+        print("got path. outputing to file")
+        print(self.outFile)
         with open(self.outFile, "w+") as f:
             for pose in msg.poses:
-                f.write(f"{pose.Point.x}, {pose.Point.y}, {pose.Point.z}")
+                f.write(f"{pose.position.x}, {pose.position.y}, {pose.position.z}\n")
 
     def pathPlanSrv_call(self):
         # service inputs
