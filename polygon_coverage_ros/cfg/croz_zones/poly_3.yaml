@@ -4,7 +4,7 @@ polygon:
 		stamp:
 			secs: 0
 			nsecs: 0
-			frame_id: 'world'
+		frame_id: 'world'
 	polygon:
 		hull:
 			points:
