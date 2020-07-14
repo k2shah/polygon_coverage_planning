@@ -4,14 +4,11 @@ Copyright (c) 2019 Kunal Shah
                 kshah.kunal@gmail.com
 """
 # std lib imports
-import sys
-import time
-import os
 import os.path as osp
-
-# std ROS imports
 import numpy as np
 import matplotlib.pyplot as plt
+
+# std ROS imports
 import rospy
 import std_msgs.msg
 from geometry_msgs.msg import PoseStamped, Vector3, PoseArray
@@ -37,13 +34,13 @@ class PlannerProxy(object):
         self.pathPlanSrv = rospy.ServiceProxy(
             "/coverage_planner/plan_path",
             PlannerService)
-        self.rootDir = os.getcwd()
+        self.rootDir = osp.dirname(os.path.abspath(__file__))
         self.outDir = "out"
         self.outName = "path"
         if not os.path.exists(self.outDir):
             os.makedirs(self.outDir)
         self.outFile = osp.join(self.rootDir, self.outDir, self.outName)
-        rospy.spin()
+        self.run()
 
     def waypointCB(self, msg):
         # write the waypoint to a file
@@ -81,7 +78,22 @@ class PlannerProxy(object):
             goalPose,
             goalVel,
             boundingBox)
+        print(rsp)
         return True
+
+    def run(self):
+        rate = rospy.Rate(10)  # 10 Hz
+        print("call to start, x to exit")
+        while not rospy.is_shutdown():
+            usrCmd = raw_input("Enter a command: ")
+            if usrCmd == 'c':
+                self.pathPlanSrv_call()
+            elif usrCmd == 'x':
+                break
+            else:
+                print('Not a valid command')
+                print("c to start, x to exit")
+            rate.sleep()
 
 
 if __name__ == '__main__':
