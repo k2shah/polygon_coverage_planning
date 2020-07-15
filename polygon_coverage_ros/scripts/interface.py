@@ -28,7 +28,7 @@ class PlannerProxy(object):
         # prep output location
         rootDir = osp.dirname(osp.abspath(__file__))
         outDir = osp.join(rootDir, "out")
-        outName = "path_3"
+        outName = "path_1"
         if not osp.exists(outDir):
             os.makedirs(outDir)
         self.outFile = osp.join(outDir, outName)
@@ -74,8 +74,8 @@ class PlannerProxy(object):
         goalVel = Vector3()
         boundingBox = Vector3()
 
-        startPose.pose.position.x = 78534.0
-        startPose.pose.position.y = 1472050.0
+        startPose.pose.position.x = 78639.0
+        startPose.pose.position.y = 1472530.0
 
         #start = goal
         goalPose.pose= startPose.pose
